@@ -36,7 +36,7 @@ class LTIHService:
         This will upsert the provided list of groups, the current user and
         make that user a member of each group.
 
-        :param h_groups: the list of models.HGroup objects to upsert
+        :param h_groups: the list of models.Grouping objects to upsert
         :param group_info_params: the params to record for these groups in
             models.GroupInfo
 

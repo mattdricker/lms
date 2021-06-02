@@ -57,7 +57,7 @@ class GroupingService:
         self, tool_consumer_instance_guid, context_id, section_id, section_name
     ):
         """
-        Create an HGroup for a course section.
+        Create a Grouping for a course section.
 
         :param section_name: The name of the section
         :param tool_consumer_instance_guid: Tool consumer GUID

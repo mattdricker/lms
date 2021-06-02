@@ -39,7 +39,7 @@ class GroupInfoService:
         will be ignored.
 
         :param h_group: the group to upsert
-        :type h_group: models.HGroup
+        :type h_group: models.Grouping
 
         :param consumer_key: the GroupInfo.consumer_key value to set
 

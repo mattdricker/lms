@@ -10,7 +10,7 @@ from lms.services import ConsumerKeyError
 pytestmark = pytest.mark.usefixtures("application_instance_service", "course_service")
 
 
-class TestHGroup:
+class TestGrouping:
     @pytest.mark.usefixtures("has_course")
     def test_it(
         self,
