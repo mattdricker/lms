@@ -14,9 +14,9 @@ class TestGroupingService:  # pylint: disable=protected-access
     CONTEXT_ID = "context_id"
     TOOL_CONSUMER_INSTANCE_GUID = "t_c_i_guid"
 
-    def test_upsert_inserts(self, svc):
+    def test_upsert_inserts(self, svc, db_session):
         # Start with no groupings
-        assert not svc._db.query(Grouping).count()
+        assert not db_session.query(Grouping).count()
 
         svc.upsert(
             Grouping(
@@ -26,24 +26,20 @@ class TestGroupingService:  # pylint: disable=protected-access
                 lms_name="lms_name",
             )
         )
-        assert svc._db.query(Grouping).count() == 1
+        assert db_session.query(Grouping).count() == 1
 
-    def test_upsert_updates(self, svc):
+    def test_upsert_updates(self, svc, db_session):
         grouping = factories.Grouping()
-        svc._db.flush()
+        db_session.flush()
 
         grouping.lms_name = "new_name"
 
         grouping = svc.upsert(grouping)
 
-        db_grouping = svc._db.query(Grouping).one()
+        db_grouping = db_session.query(Grouping).one()
         assert db_grouping.lms_name == "new_name"
 
-    def test_section_grouping_finds_course(
-        self, svc, course_service, application_instance_service
-    ):
-        application_instance_service.get.return_value = factories.ApplicationInstance()
-        course_service.get_or_create.return_value = factories.Course()
+    def test_canvas_section_finds_course(self, svc, course_service):
 
         grouping = svc.section_grouping(
             self.TOOL_CONSUMER_INSTANCE_GUID,

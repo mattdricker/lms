@@ -213,6 +213,7 @@ def canvas_api_client(pyramid_config):
 def course_service(pyramid_config):
     course_service = mock.create_autospec(CourseService, spec_set=True, instance=True)
     pyramid_config.register_service(course_service, name="course")
+    course_service.get_or_create.return_value = factories.Course()
     return course_service
 
 

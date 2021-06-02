@@ -14,7 +14,7 @@ class TestGroupInfoUpsert:
         self, application_instance, db_session, group_info_svc, params
     ):
         group_info_svc.upsert(
-            factories.Grouping(authority_provided_id=self.AUTHORITY, type="course"),
+            factories.Course(authority_provided_id=self.AUTHORITY),
             consumer_key=application_instance.consumer_key,
             params=params,
         )
