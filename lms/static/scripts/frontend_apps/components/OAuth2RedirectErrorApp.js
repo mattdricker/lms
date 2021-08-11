@@ -23,20 +23,32 @@ export default function OAuth2RedirectErrorApp({ location = window.location }) {
     OAuth2RedirectError: {
       authUrl = /** @type {string|null} */ (null),
       invalidScope = false,
+      errorCode = '',
       errorDetails = '',
       canvasScopes = /** @type {string[]} */ ([]),
     },
   } = useContext(Config);
 
-  const title = invalidScope
-    ? 'Developer key scopes missing'
-    : 'Authorization failed';
+  const title = () => {
+    if (invalidScope) {
+      return 'Developer key scopes missing';
+    }
 
-  const message = invalidScope
-    ? null
-    : 'Something went wrong when authorizing Hypothesis';
+    if (errorCode === 'blackboard_missing_integration') {
+      return 'Missing blackboard REST API Integration';
+    }
 
-  const error = { details: errorDetails };
+    return 'Authorization failed';
+  };
+
+  const error = { code: errorCode, details: errorDetails };
+
+  const message = () => {
+    if (invalidScope || errorCode !== null) {
+      return ' ';
+    }
+    return 'Something went wrong when authorizing Hypothesis';
+  };
 
   const retry = () => {
     location.href = /** @type {string} */ (authUrl);
@@ -66,7 +78,7 @@ export default function OAuth2RedirectErrorApp({ location = window.location }) {
   }
 
   return (
-    <Dialog title={title} buttons={buttons}>
+    <Dialog title={title()} buttons={buttons}>
       {invalidScope && (
         <Fragment>
           <p>
@@ -93,7 +105,26 @@ export default function OAuth2RedirectErrorApp({ location = window.location }) {
           </p>
         </Fragment>
       )}
-      <ErrorDisplay message={message} error={error} />
+
+      {error.code === 'blackboard_missing_integration' && (
+        <Fragment>
+          <p>
+            A blackboard admin needs to add or enable a REST API integration.
+          </p>
+          <p>
+            For more information see:{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://github.com/hypothesis/lms/wiki/How-to-set-up-Blackboard-API-access-for-the-LMS-app#create-a-rest-api-integration-in-the-blackboard-site"
+            >
+              Create a REST API Integration in the Blackboard site
+            </a>
+            .
+          </p>
+        </Fragment>
+      )}
+      <ErrorDisplay message={message()} error={error} />
     </Dialog>
   );
 }
