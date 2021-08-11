@@ -65,7 +65,11 @@ def oauth2_redirect(request):
 )
 def oauth2_redirect_error(request):
     request.context.js_config.enable_oauth2_redirect_error_mode(
-        auth_route="blackboard_api.oauth.authorize"
+        error_code="blackboard_missing_integration"
+        if request.params.get("error_description") == "Application not enabled for site"
+        else None,
+        error_details=request.params.get("error_description"),
+        auth_route="blackboard_api.oauth.authorize",
     )
 
     return {}
